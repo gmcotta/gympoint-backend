@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import Student from './app/models/Student';
-// import User from './app/models/User';
+import UserController from './app/controllers/UserController';
 
 const routes = new Router();
 
@@ -19,5 +19,7 @@ routes.get('/test', async (req, res) => {
 
   return res.json(student);
 });
+
+routes.post('/users', UserController.store);
 
 export default routes;

@@ -7,6 +7,8 @@ class Enrollment extends Model {
         student_id: Sequelize.INTEGER,
         plan_id: Sequelize.INTEGER,
         start_date: Sequelize.DATE,
+        end_date: Sequelize.DATE,
+        price: Sequelize.FLOAT,
       },
       { sequelize }
     );

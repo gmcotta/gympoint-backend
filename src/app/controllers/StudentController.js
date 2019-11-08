@@ -2,7 +2,12 @@ import * as Yup from 'yup';
 import Student from '../models/Student';
 
 class StudentController {
-  async create(req, res) {
+  async index(req, res) {
+    const students = await Student.findAll();
+    return res.json(students);
+  }
+
+  async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string()
@@ -43,8 +48,9 @@ class StudentController {
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation fails' });
     }
-    const { id, email } = req.body;
-    const student = await Student.findByPk(id);
+
+    const { email } = req.body;
+    const student = await Student.findByPk(req.params.id);
 
     if (email !== student.email) {
       const studentExists = await Student.findOne({ where: { email } });
@@ -53,9 +59,16 @@ class StudentController {
       }
     }
 
-    const { name, age, weight, height } = await student.update(req.body);
+    const { id, name, age, weight, height } = await student.update(req.body);
 
     return res.json({ id, name, email, age, weight, height });
+  }
+
+  async delete(req, res) {
+    const student = await Student.findByPk(req.params.id);
+
+    student.destroy();
+    return res.json({ ok: `Student ${student.name} has been deleted.` });
   }
 }
 

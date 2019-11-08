@@ -3,6 +3,7 @@ import { addMonths, parseISO } from 'date-fns';
 import Enrollment from '../models/Enrollment';
 import Student from '../models/Student';
 import Plan from '../models/Plan';
+import Mail from '../../lib/Mail';
 
 class EnrollmentController {
   async index(req, res) {
@@ -34,8 +35,10 @@ class EnrollmentController {
     }
     const { student_id, plan_id, start_date } = req.body;
 
-    const studentExists = await Enrollment.findOne({ where: { student_id } });
-    if (studentExists) {
+    const enrollmentExists = await Enrollment.findOne({
+      where: { student_id },
+    });
+    if (enrollmentExists) {
       return res.status(400).json({ error: 'Student is already enrolled.' });
     }
 
@@ -57,6 +60,12 @@ class EnrollmentController {
       start_date,
       end_date,
       price,
+    });
+
+    await Mail.sendMail({
+      to: `${student.name} <${student.email}>`,
+      subject: 'Welcome to Gympoint',
+      text: 'Welcome to Gympoint!',
     });
     return res.json(enrollment);
   }

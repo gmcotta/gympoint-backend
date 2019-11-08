@@ -20,6 +20,7 @@ class User extends Model {
         user.password_hash = await bcrypt.hashSync(user.password, 8);
       }
     });
+
     return this;
   }
 

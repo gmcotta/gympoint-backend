@@ -1,8 +1,9 @@
 import * as Yup from 'yup';
-import { addMonths, parseISO } from 'date-fns';
+import { addMonths, parseISO, format } from 'date-fns';
 import Enrollment from '../models/Enrollment';
 import Student from '../models/Student';
 import Plan from '../models/Plan';
+import Mail from '../../lib/Mail';
 import Queue from '../../lib/Queue';
 import EnrollmentMail from '../jobs/EnrollmentMail';
 
@@ -62,6 +63,26 @@ class EnrollmentController {
       end_date,
       price,
     });
+    /*
+    const formatPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+    });
+
+    await Mail.sendMail({
+      to: `${student.name} <${student.email}>`,
+      subject: 'Welcome to Gympoint',
+      template: 'welcome',
+      context: {
+        student: student.name,
+        plan: plan.title,
+        start_date: format(parseISO(start_date), "MMMM dd', 'yyyy"),
+        end_date: format(end_date, "MMMM dd', 'yyyy"),
+        price: formatPrice.format(price),
+      },
+    });
+*/
 
     await Queue.add(EnrollmentMail.key, {
       student,

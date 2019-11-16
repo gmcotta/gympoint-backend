@@ -50,7 +50,7 @@ class StudentController {
     }
 
     const { email } = req.body;
-    const student = await Student.findByPk(req.params.id);
+    const student = await Student.findByPk(req.params.student_id);
 
     if (email !== student.email) {
       const studentExists = await Student.findOne({ where: { email } });
@@ -65,7 +65,7 @@ class StudentController {
   }
 
   async delete(req, res) {
-    const student = await Student.findByPk(req.params.id);
+    const student = await Student.findByPk(req.params.student_id);
 
     student.destroy();
     return res.json({ ok: `Student ${student.name} has been deleted.` });

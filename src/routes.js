@@ -21,15 +21,17 @@ routes.put('/users', UserController.update);
 
 routes.post('/students', StudentController.store);
 routes.get('/students', StudentController.index);
-routes.put('/students/:id', StudentController.update);
-routes.delete('/students/:id', StudentController.delete);
+routes.put('/students/:student_id', StudentController.update);
+routes.delete('/students/:student_id', StudentController.delete);
 
 routes.post('/plans', PlanController.store);
 routes.get('/plans', PlanController.index);
-routes.put('/plans/:id', PlanController.update);
-routes.delete('/plans/:id', PlanController.delete);
+routes.put('/plans/:plan_id', PlanController.update);
+routes.delete('/plans/:plan_id', PlanController.delete);
 
 routes.post('/enrollments', EnrollmentController.store);
 routes.get('/enrollments', EnrollmentController.index);
+routes.put('/enrollments/:enrollment_id', EnrollmentController.update);
+routes.delete('/enrollments/:enrollment_id', EnrollmentController.delete);
 
 export default routes;

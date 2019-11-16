@@ -38,7 +38,7 @@ class PlanController {
     }
     const { title } = req.body;
 
-    const plan = await Plan.findByPk(req.params.id);
+    const plan = await Plan.findByPk(req.params.plan_id);
 
     if (plan.title !== title) {
       const planExists = await Plan.findOne({ where: { title } });
@@ -52,7 +52,7 @@ class PlanController {
   }
 
   async delete(req, res) {
-    const plan = await Plan.findByPk(req.params.id);
+    const plan = await Plan.findByPk(req.params.plan_id);
 
     await plan.destroy();
     return res.json({ ok: `Plan ${plan.title} has been deleted.` });

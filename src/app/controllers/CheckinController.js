@@ -1,6 +1,7 @@
 import { format, startOfWeek, endOfWeek } from 'date-fns';
 import { Op } from 'sequelize';
 import Checkin from '../models/Checkin';
+import Enrollment from '../models/Enrollment';
 
 class CheckinController {
   async index(req, res) {
@@ -17,6 +18,14 @@ class CheckinController {
   async store(req, res) {
     const { student_id } = req.params;
     const today = new Date();
+
+    const { active } = await Enrollment.findOne({
+      where: { student_id },
+    });
+
+    if (active === false) {
+      return res.status(400).json({ error: 'Your enrollment is not active.' });
+    }
 
     const weekCheckin = await Checkin.findAll({
       where: {
@@ -46,8 +55,6 @@ class CheckinController {
 
     const checkin = await Checkin.create({ student_id });
     return res.json(checkin);
-
-    // return res.json(weekCheckin);
   }
 }
 

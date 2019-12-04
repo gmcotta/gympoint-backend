@@ -77,7 +77,7 @@ class StudentController {
   async delete(req, res) {
     const student = await Student.findByPk(req.params.student_id);
 
-    student.destroy();
+    await student.destroy();
     return res.json({ ok: `Student ${student.name} has been deleted.` });
   }
 }

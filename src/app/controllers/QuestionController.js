@@ -3,6 +3,16 @@ import HelpOrder from '../models/HelpOrder';
 
 class QuestionController {
   async index(req, res) {
+    const helpOrder = await HelpOrder.findAll({
+      where: {
+        answer: null,
+      },
+    });
+
+    return res.json(helpOrder);
+  }
+
+  async show(req, res) {
     const { student_id } = req.params;
     const helpOrder = await HelpOrder.findAll({ where: { student_id } });
     return res.json(helpOrder);

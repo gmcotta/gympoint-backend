@@ -23,7 +23,7 @@ routes.post('/students/:student_id/checkins', CheckinController.store);
 routes.get('/students/:student_id/checkins', CheckinController.index);
 
 routes.post('/students/:student_id/help-orders', QuestionController.store);
-routes.get('/students/:student_id/help-orders', QuestionController.index);
+routes.get('/students/:student_id/help-orders', QuestionController.show);
 
 routes.use(authMiddleware);
 routes.put('/users', UserController.update);
@@ -45,5 +45,7 @@ routes.delete('/enrollments/:enrollment_id', EnrollmentController.delete);
 
 routes.post('/help-orders/:help_id/answer', AnswerController.store);
 routes.get('/help-orders', AnswerController.index);
+
+routes.get('/help-orders', QuestionController.index);
 
 export default routes;

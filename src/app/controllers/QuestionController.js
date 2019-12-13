@@ -1,20 +1,32 @@
 import * as Yup from 'yup';
 import HelpOrder from '../models/HelpOrder';
+import Student from '../models/Student';
 
 class QuestionController {
   async index(req, res) {
     const helpOrder = await HelpOrder.findAll({
-      where: {
-        answer: null,
-      },
+      where: { answer: null },
+      include: [
+        {
+          model: Student,
+          attributes: ['name'],
+        },
+      ],
     });
-
     return res.json(helpOrder);
   }
 
   async show(req, res) {
     const { student_id } = req.params;
-    const helpOrder = await HelpOrder.findAll({ where: { student_id } });
+    const helpOrder = await HelpOrder.findAll({
+      where: { student_id },
+      include: [
+        {
+          model: Student,
+          attributes: ['name'],
+        },
+      ],
+    });
     return res.json(helpOrder);
   }
 

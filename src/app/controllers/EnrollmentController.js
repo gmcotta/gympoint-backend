@@ -12,6 +12,7 @@ class EnrollmentController {
       attributes: [
         'id',
         'student_id',
+        'plan_id',
         'start_date',
         'end_date',
         'price',
@@ -29,6 +30,35 @@ class EnrollmentController {
       ],
     });
     return res.json(enrollments);
+  }
+
+  async show(req, res) {
+    const { enrollment_id } = req.params;
+    const enrollment = await Enrollment.findByPk(enrollment_id, {
+      attributes: [
+        'id',
+        ['student_id', 'student'],
+        ['plan_id', 'plan'],
+        'start_date',
+        'end_date',
+        'price',
+        'active',
+      ],
+      include: [
+        {
+          model: Student,
+          attributes: ['name', 'email'],
+        },
+        {
+          model: Plan,
+          attributes: ['title'],
+        },
+      ],
+    });
+    if (!enrollment) {
+      return res.status(400).json({ error: 'No enrollment available.' });
+    }
+    return res.json(enrollment);
   }
 
   async store(req, res) {

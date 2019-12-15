@@ -51,7 +51,7 @@ class EnrollmentController {
         },
         {
           model: Plan,
-          attributes: ['title'],
+          attributes: ['title', 'duration'],
         },
       ],
     });

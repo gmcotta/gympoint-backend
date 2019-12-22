@@ -1,4 +1,4 @@
-import { format, startOfWeek, endOfWeek } from 'date-fns';
+import { parseISO, startOfWeek, endOfWeek, isSameDay } from 'date-fns';
 import { Op } from 'sequelize';
 import Checkin from '../models/Checkin';
 import Enrollment from '../models/Enrollment';
@@ -37,18 +37,17 @@ class CheckinController {
     });
 
     if (weekCheckin.length >= 5) {
-      res
+      return res
         .status(400)
         .json({ error: 'The week limit of check-ins was reached.' });
     }
 
-    const todayCheckin = weekCheckin.find(
-      c =>
-        format(c.createdAt, "y'-'MM'-'dd") === format(new Date(), "y'-'MM'-'dd")
+    const todayCheckin = weekCheckin.filter(checkin =>
+      isSameDay(checkin.createdAt, today)
     );
 
     if (todayCheckin) {
-      res
+      return res
         .status(400)
         .json({ error: 'You have already made a check-in today.' });
     }

@@ -1,4 +1,4 @@
-import { parseISO, startOfWeek, endOfWeek, isSameDay } from 'date-fns';
+import { startOfWeek, endOfWeek, isSameDay } from 'date-fns';
 import { Op } from 'sequelize';
 import Checkin from '../models/Checkin';
 import Enrollment from '../models/Enrollment';
@@ -46,10 +46,10 @@ class CheckinController {
       isSameDay(checkin.createdAt, today)
     );
 
-    if (todayCheckin) {
+    if (todayCheckin.length > 0) {
       return res
         .status(400)
-        .json({ error: 'You have already made a check-in today.' });
+        .json({ error: 'You already have made a check-in today.' });
     }
 
     const checkin = await Checkin.create({ student_id });

@@ -16,6 +16,8 @@ routes.get('/', (req, res) => {
   return res.json({ message: 'Hello World' });
 });
 
+routes.get('/help-orders/:help_id', AnswerController.show);
+
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
 routes.get('/students/:student_id', StudentController.show);

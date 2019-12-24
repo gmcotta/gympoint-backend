@@ -10,6 +10,15 @@ class AnswerController {
     return res.json(helpOrder);
   }
 
+  async show(req, res) {
+    const { help_id } = req.params;
+    const helpOrder = await HelpOrder.findByPk(help_id);
+    if (!helpOrder) {
+      return res.status(400).json({ error: 'Help order not found' });
+    }
+    return res.json(helpOrder);
+  }
+
   async store(req, res) {
     const schema = Yup.object().shape({
       answer: Yup.string().required(),

@@ -29,6 +29,7 @@ routes.post('/students/:student_id/help-orders', QuestionController.store);
 routes.get('/students/:student_id/help-orders', QuestionController.show);
 
 routes.use(authMiddleware);
+
 routes.put('/users', UserController.update);
 
 routes.post('/students', StudentController.store);

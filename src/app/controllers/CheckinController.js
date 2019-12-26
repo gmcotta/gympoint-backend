@@ -1,4 +1,4 @@
-import { startOfWeek, endOfWeek, isSameDay } from 'date-fns';
+import { startOfWeek, endOfWeek, subDays, isSameDay } from 'date-fns';
 import { Op } from 'sequelize';
 import Checkin from '../models/Checkin';
 import Enrollment from '../models/Enrollment';
@@ -10,7 +10,7 @@ class CheckinController {
     const checkins = await Checkin.findAll({
       where: { student_id },
       attributes: ['id', 'createdAt'],
-      order: [['createdAt', 'DESC']],
+      order: [['createdAt', 'ASC']],
     });
     return res.json(checkins);
   }
@@ -31,7 +31,7 @@ class CheckinController {
       where: {
         student_id,
         createdAt: {
-          [Op.between]: [startOfWeek(today), endOfWeek(today)],
+          [Op.between]: [subDays(today, 7), today],
         },
       },
     });

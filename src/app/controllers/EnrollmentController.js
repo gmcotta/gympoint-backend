@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { addMonths, parseISO, isBefore } from 'date-fns';
+import { addMonths, parseISO, isBefore, startOfDay } from 'date-fns';
 import Enrollment from '../models/Enrollment';
 import Student from '../models/Student';
 import Plan from '../models/Plan';
@@ -74,7 +74,7 @@ class EnrollmentController {
 
     const { student_id, plan_id, start_date } = req.body;
 
-    if (isBefore(parseISO(start_date), new Date())) {
+    if (isBefore(parseISO(start_date), startOfDay(new Date()))) {
       return res.status(400).json({ error: 'Past dates are not acceptable.' });
     }
 
@@ -126,7 +126,7 @@ class EnrollmentController {
       return res.status(400).json({ error: 'Validation fails.' });
     }
 
-    if (isBefore(parseISO(req.body.start_date), new Date())) {
+    if (isBefore(parseISO(req.body.start_date), startOfDay(new Date()))) {
       return res.status(400).json({ error: 'Past dates are not acceptable.' });
     }
 

@@ -1,6 +1,8 @@
 import * as Yup from 'yup';
 import { Op } from 'sequelize';
 import Student from '../models/Student';
+import Enrollment from '../models/Enrollment';
+import Plan from '../models/Plan';
 
 class StudentController {
   async index(req, res) {
@@ -20,10 +22,19 @@ class StudentController {
   async show(req, res) {
     const { student_id } = req.params;
     const student = await Student.findByPk(student_id);
+    const enrollment = await Enrollment.findOne({
+      where: { student_id },
+      include: [
+        {
+          model: Plan,
+          attributes: ['title', 'duration'],
+        },
+      ],
+    });
     if (!student) {
       return res.status(400).json({ error: 'No student found.' });
     }
-    return res.json(student);
+    return res.json({ student, enrollment });
   }
 
   async store(req, res) {

@@ -12,6 +12,7 @@ class QuestionController {
           attributes: ['name'],
         },
       ],
+      order: [['createdAt', 'DESC']],
     });
     return res.json(helpOrder);
   }

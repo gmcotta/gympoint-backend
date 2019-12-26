@@ -1,4 +1,4 @@
-import { startOfWeek, endOfWeek, subDays, isSameDay } from 'date-fns';
+import { subDays, isSameDay } from 'date-fns';
 import { Op } from 'sequelize';
 import Checkin from '../models/Checkin';
 import Enrollment from '../models/Enrollment';
@@ -6,11 +6,15 @@ import Enrollment from '../models/Enrollment';
 class CheckinController {
   async index(req, res) {
     const { student_id } = req.params;
+    const { page = 1 } = req.query;
+    const perPage = 2;
 
     const checkins = await Checkin.findAll({
       where: { student_id },
       attributes: ['id', 'createdAt'],
       order: [['createdAt', 'ASC']],
+      limit: perPage,
+      offset: (page - 1) * perPage,
     });
     return res.json(checkins);
   }

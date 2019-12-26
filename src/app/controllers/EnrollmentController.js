@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { addMonths, parseISO, isBefore, startOfDay } from 'date-fns';
+import { Op } from 'sequelize';
 import Enrollment from '../models/Enrollment';
 import Student from '../models/Student';
 import Plan from '../models/Plan';
@@ -8,7 +9,18 @@ import EnrollmentMail from '../jobs/EnrollmentMail';
 
 class EnrollmentController {
   async index(req, res) {
+    const { page = 1 } = req.query;
+    const perPage = 2;
+
     const enrollments = await Enrollment.findAll({
+      where: {
+        student_id: {
+          [Op.ne]: null,
+        },
+        plan_id: {
+          [Op.ne]: null,
+        },
+      },
       attributes: [
         'id',
         'student_id',
@@ -28,6 +40,8 @@ class EnrollmentController {
           attributes: ['title'],
         },
       ],
+      limit: perPage,
+      offset: (page - 1) * perPage,
     });
     return res.json(enrollments);
   }

@@ -6,16 +6,16 @@ import Plan from '../models/Plan';
 
 class StudentController {
   async index(req, res) {
-    const queryName = req.query.name;
-    if (queryName !== undefined) {
-      const students = await Student.findAll({
-        where: {
-          name: { [Op.like]: `%${queryName}%` },
-        },
-      });
-      return res.json(students);
-    }
-    const students = await Student.findAll();
+    const { page, perPage, name: queryName } = req.query;
+
+    const students = await Student.findAll({
+      where: {
+        name: { [Op.like]: `%${queryName}%` },
+      },
+      limit: perPage,
+      offset: (page - 1) * perPage,
+    });
+
     return res.json(students);
   }
 

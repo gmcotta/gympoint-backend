@@ -8,7 +8,7 @@ class StudentController {
   async index(req, res) {
     const { page, perPage, name: queryName } = req.query;
 
-    if (page === undefined || perPage === undefined) {
+    if (page === undefined && perPage === undefined) {
       const students = await Student.findAll({
         where: {
           name: { [Op.like]: `%${queryName}%` },

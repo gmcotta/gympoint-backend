@@ -9,8 +9,40 @@ import EnrollmentMail from '../jobs/EnrollmentMail';
 
 class EnrollmentController {
   async index(req, res) {
-    const { page = 1 } = req.query;
-    const perPage = 2;
+    const { page, perPage } = req.query;
+
+    if (page === undefined && perPage === undefined) {
+      const enrollments = await Enrollment.findAll({
+        where: {
+          student_id: {
+            [Op.ne]: null,
+          },
+          plan_id: {
+            [Op.ne]: null,
+          },
+        },
+        attributes: [
+          'id',
+          'student_id',
+          'plan_id',
+          'start_date',
+          'end_date',
+          'price',
+          'active',
+        ],
+        include: [
+          {
+            model: Student,
+            attributes: ['name', 'email'],
+          },
+          {
+            model: Plan,
+            attributes: ['title'],
+          },
+        ],
+      });
+      return res.json(enrollments);
+    }
 
     const enrollments = await Enrollment.findAll({
       where: {

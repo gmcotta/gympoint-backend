@@ -5,7 +5,7 @@ class PlanController {
   async index(req, res) {
     const { page, perPage } = req.query;
 
-    if (page === undefined || perPage === undefined) {
+    if (page === undefined && perPage === undefined) {
       const plans = await Plan.findAll();
       return res.json(plans);
     }

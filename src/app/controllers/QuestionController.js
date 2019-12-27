@@ -4,8 +4,21 @@ import Student from '../models/Student';
 
 class QuestionController {
   async index(req, res) {
-    const { page = 1 } = req.query;
-    const perPage = 2;
+    const { page, perPage } = req.query;
+
+    if (page === undefined && perPage === undefined) {
+      const helpOrder = await HelpOrder.findAll({
+        where: { answer: null },
+        include: [
+          {
+            model: Student,
+            attributes: ['name'],
+          },
+        ],
+        order: [['createdAt', 'DESC']],
+      });
+      return res.json(helpOrder);
+    }
 
     const helpOrder = await HelpOrder.findAll({
       where: { answer: null },

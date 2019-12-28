@@ -6,17 +6,28 @@ import Enrollment from '../models/Enrollment';
 class CheckinController {
   async index(req, res) {
     const { student_id } = req.params;
-    const { page = 1 } = req.query;
-    const perPage = 2;
+    const { page } = req.query;
+    const perPage = 9;
+    const today = new Date();
 
     const checkins = await Checkin.findAll({
       where: { student_id },
       attributes: ['id', 'createdAt'],
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'DESC']],
       limit: perPage,
       offset: (page - 1) * perPage,
     });
-    return res.json(checkins);
+
+    const count = await Checkin.count({
+      where: {
+        student_id,
+        createdAt: {
+          [Op.between]: [subDays(today, 7), today],
+        },
+      },
+    });
+
+    return res.json({ checkins, count });
   }
 
   async store(req, res) {

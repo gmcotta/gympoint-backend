@@ -37,8 +37,8 @@ class QuestionController {
 
   async show(req, res) {
     const { student_id } = req.params;
-    const { page = 1 } = req.query;
-    const perPage = 2;
+    const { page } = req.query;
+    const perPage = 5;
 
     const helpOrder = await HelpOrder.findAll({
       where: { student_id },

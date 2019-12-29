@@ -38,7 +38,7 @@ class QuestionController {
   async show(req, res) {
     const { student_id } = req.params;
     const { page } = req.query;
-    const perPage = 5;
+    const perPage = 4;
 
     const helpOrder = await HelpOrder.findAll({
       where: { student_id },
@@ -48,6 +48,7 @@ class QuestionController {
           attributes: ['name'],
         },
       ],
+      order: [['createdAt', 'DESC'], ['answer', 'ASC NULLS FIRST']],
       limit: perPage,
       offset: (page - 1) * perPage,
     });

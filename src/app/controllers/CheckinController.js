@@ -7,8 +7,7 @@ class CheckinController {
   async index(req, res) {
     const { student_id } = req.params;
     const { page } = req.query;
-    const perPage = 9;
-    const today = new Date();
+    const perPage = 8;
 
     const checkins = await Checkin.findAll({
       where: { student_id },
@@ -19,12 +18,7 @@ class CheckinController {
     });
 
     const count = await Checkin.count({
-      where: {
-        student_id,
-        createdAt: {
-          [Op.between]: [subDays(today, 7), today],
-        },
-      },
+      where: { student_id },
     });
 
     return res.json({ checkins, count });

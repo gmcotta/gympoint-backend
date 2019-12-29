@@ -11,6 +11,7 @@ class PlanController {
     }
 
     const plans = await Plan.findAll({
+      order: [['duration', 'ASC']],
       limit: perPage,
       offset: (page - 1) * perPage,
     });

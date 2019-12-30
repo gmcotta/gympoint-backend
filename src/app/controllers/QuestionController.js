@@ -4,6 +4,22 @@ import Student from '../models/Student';
 
 class QuestionController {
   async index(req, res) {
+    const { page, perPage } = req.query;
+
+    if (page === undefined && perPage === undefined) {
+      const helpOrder = await HelpOrder.findAll({
+        where: { answer: null },
+        include: [
+          {
+            model: Student,
+            attributes: ['name'],
+          },
+        ],
+        order: [['createdAt', 'DESC']],
+      });
+      return res.json(helpOrder);
+    }
+
     const helpOrder = await HelpOrder.findAll({
       where: { answer: null },
       include: [
@@ -13,12 +29,17 @@ class QuestionController {
         },
       ],
       order: [['createdAt', 'DESC']],
+      limit: perPage,
+      offset: (page - 1) * perPage,
     });
     return res.json(helpOrder);
   }
 
   async show(req, res) {
     const { student_id } = req.params;
+    const { page } = req.query;
+    const perPage = 4;
+
     const helpOrder = await HelpOrder.findAll({
       where: { student_id },
       include: [
@@ -27,6 +48,9 @@ class QuestionController {
           attributes: ['name'],
         },
       ],
+      order: [['createdAt', 'DESC'], ['answer', 'ASC NULLS FIRST']],
+      limit: perPage,
+      offset: (page - 1) * perPage,
     });
     return res.json(helpOrder);
   }

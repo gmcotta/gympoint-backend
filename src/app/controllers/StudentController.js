@@ -6,8 +6,9 @@ import Plan from '../models/Plan';
 
 class StudentController {
   async index(req, res) {
-    const queryName = req.query.name;
-    if (queryName !== undefined) {
+    const { page, perPage, name: queryName } = req.query;
+
+    if (page === undefined && perPage === undefined) {
       const students = await Student.findAll({
         where: {
           name: { [Op.like]: `%${queryName}%` },
@@ -15,7 +16,15 @@ class StudentController {
       });
       return res.json(students);
     }
-    const students = await Student.findAll();
+
+    const students = await Student.findAll({
+      where: {
+        name: { [Op.like]: `%${queryName}%` },
+      },
+      limit: perPage,
+      offset: (page - 1) * perPage,
+    });
+
     return res.json(students);
   }
 

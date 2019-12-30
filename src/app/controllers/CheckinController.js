@@ -1,4 +1,4 @@
-import { startOfWeek, endOfWeek, subDays, isSameDay } from 'date-fns';
+import { subDays, isSameDay, subHours } from 'date-fns';
 import { Op } from 'sequelize';
 import Checkin from '../models/Checkin';
 import Enrollment from '../models/Enrollment';
@@ -6,13 +6,22 @@ import Enrollment from '../models/Enrollment';
 class CheckinController {
   async index(req, res) {
     const { student_id } = req.params;
+    const { page } = req.query;
+    const perPage = 8;
 
     const checkins = await Checkin.findAll({
       where: { student_id },
       attributes: ['id', 'createdAt'],
-      order: [['createdAt', 'ASC']],
+      order: [['createdAt', 'DESC']],
+      limit: perPage,
+      offset: (page - 1) * perPage,
     });
-    return res.json(checkins);
+
+    const count = await Checkin.count({
+      where: { student_id },
+    });
+
+    return res.json({ checkins, count });
   }
 
   async store(req, res) {
@@ -43,7 +52,7 @@ class CheckinController {
     }
 
     const todayCheckin = weekCheckin.filter(checkin =>
-      isSameDay(checkin.createdAt, today)
+      isSameDay(subHours(checkin.createdAt, 3), today)
     );
 
     if (todayCheckin.length > 0) {
